@@ -1,5 +1,12 @@
+import { log } from 'matchstick-as';
 import { Claim, User, VestingSchedule } from '../generated/schema';
-import { AddVestingSchedule, ReleaseVestedToken, UpfrontTokenTransfer, RevokeVestingShedule as RevokeVestingSchedule } from '../generated/TokenVesting/TokenVesting';
+import {
+  AddVestingSchedule,
+  ReleaseVestedToken,
+  UpfrontTokenTransfer,
+  RevokeVestingShedule as RevokeVestingSchedule,
+} from '../generated/TokenVesting/TokenVesting';
+import { BigInt } from '@graphprotocol/graph-ts';
 
 export function handleAddVestingSchedule(event: AddVestingSchedule): void {
   // Create a new vesting schedule
@@ -10,6 +17,8 @@ export function handleAddVestingSchedule(event: AddVestingSchedule): void {
   let user = User.load(userId);
   if (!user) {
     user = new User(userId);
+    user.totalAllocation = new BigInt(0);
+    user.totalReleased = new BigInt(0);
   }
 
   vestingSchedule.id = vestingScheduleId;
@@ -56,7 +65,6 @@ export function handleReleaseVestedToken(event: ReleaseVestedToken): void {
   vestingSchedule.released = vestingSchedule.released.plus(amount);
   user.totalReleased = user.totalReleased.plus(amount);
 
-
   user.save();
   vestingSchedule.save();
   claim.save();
@@ -71,6 +79,8 @@ export function handleUpfrontTokenTransfer(event: UpfrontTokenTransfer): void {
   let user = User.load(userId);
   if (!user) {
     user = new User(userId);
+    user.totalReleased = new BigInt(0);
+    user.totalAllocation = new BigInt(0);
   }
 
   // Load or create vesting
@@ -78,6 +88,16 @@ export function handleUpfrontTokenTransfer(event: UpfrontTokenTransfer): void {
   let vesting = VestingSchedule.load(vestingId);
   if (!vesting) {
     vesting = new VestingSchedule(vestingId);
+    vesting.beneficiary = userId;
+    vesting.cliff = new BigInt(0).toI32();
+    vesting.start = new BigInt(0).toI32();
+    vesting.duration = new BigInt(0).toI32();
+    vesting.slicePeriodSeconds = new BigInt(0).toI32();
+    vesting.revocable = false;
+    vesting.amountTotal = new BigInt(0);
+    vesting.released = new BigInt(0);
+    vesting.revoked = false;
+    vesting.upFront = new BigInt(0);
   }
 
   //Extract to common function
@@ -98,7 +118,7 @@ export function handleUpfrontTokenTransfer(event: UpfrontTokenTransfer): void {
 
 export function handleRevokeVestingSchedule(event: RevokeVestingSchedule): void {
   let vestingScheduleId = event.params.vestingScheduleId.toHexString();
-  
+
   // Load vesting
   let vesting = VestingSchedule.load(vestingScheduleId);
   if (!vesting) {

@@ -4,7 +4,7 @@ type User @entity {
   # vesting schedules
   vestingSchedules: [VestingSchedule!]! @derivedFrom(field: "beneficiary")
   # claims
-  claims: [Claim!]! @derivedFrom(field: "beneficiary")
+  claims: [Claim!] @derivedFrom(field: "beneficiary")
   #  sum of all vesting schedule amounts
   totalAllocation: BigInt!
   #  sum of all upfront releases and token claim amounts

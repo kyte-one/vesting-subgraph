@@ -2,11 +2,13 @@
   "name": "kte-subgraph",
   "version": "0.1.0",
   "scripts": {
-    "create": "graph create kyte-one/kte-subgraph --node https://api.thegraph.com/deploy/",
-    "create:local": "graph create kyte-one/kte-subgraph --node http://127.0.0.1:8020",
-    "codegen": "graph codegen",
-    "deploy": "graph deploy kyte-one/kte-vesting-bsc --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
-    "deploy:local": "graph deploy kyte-one/kte-subgraph --ipfs http://localhost:5001 --node http://127.0.0.1:8020",
+    "codegen": "graph codegen",    
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ kte-subgraph",
+    "create-local": "graph create --node http://localhost:8020/ kte-subgraph",
+    "remove-local": "graph remove --node http://localhost:8020/ kte-subgraph",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 kte-subgraph",
+    "test": "graph test",
     "format": "prettier --config ./.prettierrc --write '**/*.{js,ts,tsx,scss,css,md,json,graphql}'",
     "prepare:local": "mustache config/local.json subgraph.template.yaml > subgraph.yaml",
     "prepare:fuji": "mustache config/fuji.json subgraph.template.yaml > subgraph.yaml",
@@ -15,8 +17,8 @@
     "kte:prepare:fuji": "mustache config/fuji.json kte.subgraph.template.yaml > kte.subgraph.yaml"
   },
   "devDependencies": {
-    "@graphprotocol/graph-cli": "^0.22.4",
-    "@graphprotocol/graph-ts": "^0.22.1",
+    "@graphprotocol/graph-cli": "0.79.0",
+    "@graphprotocol/graph-ts": "0.32.0",
     "prettier": "^2.4.1"
   },
   "dependencies": {
@@ -24,6 +26,7 @@
     "@openzeppelin/subgraphs": "^0.1.7-1",
     "babel-polyfill": "^6.26.0",
     "babel-register": "^6.26.0",
+    "matchstick-as": "0.5.0",
     "mustache": "^4.2.0"
   }
 }
