@@ -1,4 +1,4 @@
-type User @entity {
+type User @entity(immutable: false) {
   # wallet address
   id: ID!
   # vesting schedules
@@ -11,7 +11,7 @@ type User @entity {
   totalReleased: BigInt!
 }
 
-type VestingSchedule @entity {
+type VestingSchedule @entity(immutable: false) {
   # vesting schedule Id
   id: ID!
   beneficiary: User!
@@ -31,11 +31,11 @@ enum ClaimType {
   PostVesting
 }
 
-type Claim @entity {
+type Claim @entity(immutable: false) {
   id: ID!
   amount: BigInt!
   vestingSchedule: VestingSchedule!
   beneficiary: User!
-  claimType: ClaimType!,
+  claimType: ClaimType!
   timestamp: Int!
 }

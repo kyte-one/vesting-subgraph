@@ -18,18 +18,16 @@
 ## Deployment Steps
 
 
-sign up on the graph with a github account
-create a graph project
-
+create a graph studio project
 
 1. `npm install -g @graphprotocol/graph-cli`
 
-2. `graph auth --product hosted-service <ACCESS_TOKEN>`
+2. `graph init graph init kte-vesting-bsc`
 
-npm run codegen
+3. `graph auth xxxx`
 
-set contract address and startblock in <network>.json
+4. `npm run prepare:bsc`
 
-set repository address (<gitUserName>/<graphProjectName>) in subgraph.template.yaml and package.json
+5. `graph codegen && graph build`
 
-3. `npm run deploy`
+6. `graph deploy kte-vesting-bsc`
